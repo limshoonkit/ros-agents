@@ -42,7 +42,8 @@ The core of ROS Agents is agnostic to model serving platforms. It currently supp
 Install python dependencies
 
 ```shell
-pip install numpy opencv-python-headless 'attrs>=23.2.0' jinja2 httpx setproctitle msgpack msgpack-numpy numpy-quaternion platformdirs
+pip install numpy==1.25 opencv-python-headless 'attrs>=23.2.0' jinja2 httpx setproctitle msgpack msgpack-numpy numpy-quaternion platformdirs omegaconf
+pip install redis[hiredis] msgpack msgpack-numpy
 ```
 
 Download ROS Sugar

@@ -9,7 +9,7 @@ from ..clients.db_base import DBClient
 from ..clients.model_base import ModelClient
 from ..clients import OllamaClient
 from ..config import LLMConfig
-from ..ros import FixedInput, String, Topic, Detections
+from ..ros import FixedInput, String, Topic, Detections, VehicleOdometry, VehicleStatus
 from ..utils import get_prompt_template, validate_func_args
 from .model_component import ModelComponent
 from .component_base import ComponentRunType
@@ -82,11 +82,15 @@ class LLM(ModelComponent):
         self.allowed_inputs = (
             kwargs["allowed_inputs"]
             if kwargs.get("allowed_inputs")
-            else {"Required": [String], "Optional": [Detections]}
+            else {"Required": [String], "Optional": [Detections, VehicleOdometry, VehicleStatus]}
         )
         self.handled_outputs = [String]
 
         self.model_client = model_client
+
+        self.latest_vehicle_odom_response = None
+
+        self.latest_vehicle_status_response = None
 
         self.db_client = db_client if db_client else None
 
@@ -333,6 +337,10 @@ class LLM(ModelComponent):
                     context[i.input_topic.name] = item
                 elif i.input_topic.msg_type is Detections:
                     context[i.input_topic.name] = item
+                elif i.input_topic.msg_type is VehicleOdometry:
+                    self.latest_vehicle_odom_response = item
+                elif i.input_topic.msg_type is VehicleStatus:
+                    self.latest_vehicle_status_response = item
 
         if query is None:
             return None

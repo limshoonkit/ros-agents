@@ -4,17 +4,20 @@ from agents.clients.roboml import HTTPModelClient
 from agents.clients.ollama import OllamaClient
 from agents.models import Whisper, SpeechT5, Llava
 from agents.ros import Topic, Launcher
+from rclpy.qos import ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
 
 audio_in = Topic(name="audio0", msg_type="Audio")
 text_query = Topic(name="text0", msg_type="String")
 
 whisper = Whisper(name="whisper")  # Custom model init params can be provided here
-roboml_whisper = HTTPModelClient(whisper)
+roboml_whisper = HTTPModelClient(whisper, port=9000)
 
 s2t_config = SpeechToTextConfig(
     enable_vad=True,  # option to listen for speech through the microphone
     enable_wakeword=True,  # option to invoke the component with a wakeword like 'hey jarvis'
 )
+
+print("[uosm] starting speech to text setup")
 speech_to_text = SpeechToText(
     inputs=[audio_in],
     outputs=[text_query],
@@ -23,8 +26,15 @@ speech_to_text = SpeechToText(
     config=s2t_config,
     component_name="speech_to_text",
 )
+print("[uosm] ending speech to text setup")
 
-image0 = Topic(name="image_raw", msg_type="Image")
+qos_profile = {
+    'reliability': ReliabilityPolicy.BEST_EFFORT,
+    'durability': DurabilityPolicy.VOLATILE,
+    'history': HistoryPolicy.KEEP_LAST,
+}
+
+image0 = Topic(name="/camera/image", msg_type="Image", qos_profile=qos_profile)
 text_answer = Topic(name="text1", msg_type="String")
 
 llava = Llava(name="llava")
@@ -41,8 +51,8 @@ mllm = MLLM(
 # config for playing audio on device
 t2s_config = TextToSpeechConfig(play_on_device=True)
 
-speecht5 = SpeechT5(name="speecht5")
-roboml_speecht5 = HTTPModelClient(speecht5)
+speecht5 = SpeechT5(name="speecht5", voice="ksp")
+roboml_speecht5 = HTTPModelClient(speecht5, port=9000)
 text_to_speech = TextToSpeech(
     inputs=[text_answer],
     trigger=text_answer,

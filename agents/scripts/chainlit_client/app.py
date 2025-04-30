@@ -55,7 +55,8 @@ class ClientNode(Node):
                 self.timer = self.create_timer(0, self.timer_callback)
                 return None
             msg = ByteMultiArray()
-            msg.data = prompt
+            msg.data = [bytes([byte]) for byte in prompt]
+            # print(msg.data)
             self.audio_publisher.publish(msg)
             self.get_logger().info(f"Publishing to {self.audio_trigger}")
         else:
@@ -171,7 +172,7 @@ async def on_chat_start():
     client: ClientNode = ClientNode()
     cl.user_session.set("client", client)
     await cl.Message(
-        content="Welcome to Leibniz ROS client. Set the input/output topics in settings. Then type your message or press `P` to send audio!"
+        content="Type your message or press `P` to send audio!"
     ).send()
 
 

@@ -16,6 +16,9 @@ from ros_sugar.supported_types import (
     String,
     ROSImage,
     ROSCompressedImage,
+    # PX4
+    VehicleOdometry,
+    VehicleStatus,
 )
 from ros_sugar.io import Topic as BaseTopic
 
@@ -56,6 +59,9 @@ __all__ = [
     "component_action",
     "MapLayer",
     "Route",
+    # PX4
+    "VehicleOdometry",
+    "VehicleStatus",
 ]
 
 

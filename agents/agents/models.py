@@ -13,6 +13,7 @@ __all__ = [
     "Llama3_1",
     "OllamaModel",
     "Idefics2",
+    "DeepSeekVL",
     "Llava",
     "Whisper",
     "InstructBlip",
@@ -26,12 +27,16 @@ _ollama_mapping = [
     "llava",
     "llama3",
     "llama3_1",
+    "llama3.2-vision",
     "phi3",
     "qwen2",
     "aya",
     "mistral",
     "mixtral",
-    "gemma2",
+    "gemma3",
+    "moondream",
+    "minicpm",
+    "deepseek"
 ]
 
 

@@ -15,10 +15,10 @@ llama_client = OllamaClient(llama)
 
 # Initialize a vector DB that will store our routes
 chroma = ChromaDB(name="MainDB")
-chroma_client = HTTPDBClient(db=chroma)
+chroma_client = HTTPDBClient(db=chroma, port=9000)
 
 # Define LLM input and output topics including goal_point topic of type PoseStamped
-goto_in = Topic(name="goto_in", msg_type="String")
+goto_in = Topic(name="text0", msg_type="String")
 goal_point = Topic(name="goal_point", msg_type="PoseStamped")
 
 config = LLMConfig(
